@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import { useState, useEffect } from "react";
+import WindowTracker from "./WindowTracker";
+import "./index.css";
+export default function App() {
+  /**
+   * Challenge:
+   * 1. Create state called `show`, default to `true`
+   * 2. When the button is clicked, toggle `show`
+   * 3. Only display `<WindowTracker>` if `show` is `true`
+   */
+  const [show, setShow] = useState(true);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <button>Toggle WindowTracker</button>
+      <WindowTracker />
     </div>
   );
 }
-
-export default App;
