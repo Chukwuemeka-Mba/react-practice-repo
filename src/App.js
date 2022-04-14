@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import WindowTracker from "./WindowTracker";
 import "./index.css";
+import Navbar from "./components/Navbar";
+import Main from "./components/Main";
+
 export default function App() {
-  const [show, setShow] = useState(true);
-  function toggleShow() {
-    setShow((prevState) => !prevState);
+  const [darkMode, setDarkMode] = useState(false);
+  function toggleDarkMode() {
+    setDarkMode((prevState) => !prevState);
   }
   return (
     <div className="container">
-      <button onClick={toggleShow}>Toggle WindowTracker</button>
-      {show && <WindowTracker />}
+      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <Main darkMode={darkMode} />
     </div>
   );
 }
