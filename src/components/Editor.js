@@ -1,4 +1,5 @@
 import React from "react";
+import "../index.css";
 import ReactMde from "react-mde";
 import Showdown from "showdown";
 
