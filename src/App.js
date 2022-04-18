@@ -1,85 +1,82 @@
 import { useState, useEffect } from "react";
-import Sidebar from "./components/Sidebar";
-import Editor from "./components/Editor";
-// import { data } from "./data";
-import "./index.css";
-import Split from "react-split";
+import Die from "./Die";
+import "./styles.css";
 import { nanoid } from "nanoid";
+import Confetti from "react-confetti";
+import { useWindowSizes } from "react-use-window-sizes";
 
 export default function App() {
-  const [notes, setNotes] = useState(
-    () => JSON.parse(window.localStorage.getItem("notes")) || []
-  );
-  const [currentNoteId, setCurrentNoteId] = useState(
-    (notes[0] && notes[0].id) || ""
-  );
+  const [nums, setNums] = useState(getNewDice());
+  const [endGame, setEndGame] = useState(false);
+  const { width, height } = useWindowSizes();
 
   useEffect(() => {
-    localStorage.setItem("notes", JSON.stringify(notes));
-  }, [notes]);
+    const allHeld = nums.every((num) => num.isHeld);
+    const firstNum = nums[0].value;
+    const allSameNum = nums.every((num) => num.value === firstNum);
+    if (allHeld && allSameNum) {
+      setEndGame(true);
+      console.log("You won");
+    }
+  }, [nums]);
 
-  function createNewNote() {
-    const newNote = {
-      id: nanoid(),
-      body: "# Type your markdown note's title here",
-    };
-    setNotes((prevNotes) => [newNote, ...prevNotes]);
-    setCurrentNoteId(newNote.id);
+  function getNewDice() {
+    let arr = [];
+    for (let i = 0; i < 10; i++) {
+      const dieNum = Math.floor(Math.ceil(Math.random() * 6));
+      arr.push({ value: dieNum, isHeld: false, id: nanoid() });
+    }
+    return arr;
   }
 
-  function updateNote(text) {
-    // Try to rearrange the notes according
-    // to the most recently updated one
+  function rollDice() {
+    if (endGame === true) {
+      setNums(getNewDice());
+      setEndGame(false);
+    } else {
+      setNums((prevState) =>
+        prevState.map((num) => {
+          const dieNum = Math.floor(Math.ceil(Math.random() * 6));
+          return num.isHeld === false ? { ...num, value: dieNum } : num;
+        })
+      );
+    }
+  }
 
-    setNotes((oldNotes) => {
-      const newArray = [];
-      for (let i = 0; i < oldNotes.length; i++) {
-        const oldNote = oldNotes[i];
-        if (oldNote.id === currentNoteId) {
-          newArray.unshift({ ...oldNote, body: text });
-        } else {
-          newArray.push(oldNote);
-        }
-      }
-      return newArray;
-    });
-  }
-  function deleteNote(event, noteId) {
-    event.stopPropagation();
-    // Your code here
-    setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
-  }
-  function findCurrentNote() {
-    return (
-      notes.find((note) => {
-        return note.id === currentNoteId;
-      }) || notes[0]
+  function holdNum(id) {
+    setNums((prevState) =>
+      prevState.map((num) => {
+        return num.id === id ? { ...num, isHeld: !num.isHeld } : num;
+      })
     );
   }
-
   return (
-    <main>
-      {notes.length > 0 ? (
-        <Split sizes={[30, 70]} direction="horizontal" className="split">
-          <Sidebar
-            notes={notes}
-            currentNote={findCurrentNote()}
-            setCurrentNoteId={setCurrentNoteId}
-            newNote={createNewNote}
-            deleteNote={deleteNote}
-          />
-          {currentNoteId && notes.length > 0 && (
-            <Editor currentNote={findCurrentNote()} updateNote={updateNote} />
-          )}
-        </Split>
-      ) : (
-        <div className="no-notes">
-          <h1>You have no notes</h1>
-          <button className="first-note" onClick={createNewNote}>
-            Create one now
+    <div>
+      <main>
+        {endGame ? <Confetti width={width} height={height} /> : ""}
+        <div className="info">
+          <h1>Tenzies</h1>
+          <p>
+            Roll untill all dice are the same. Click each die to freeze as its
+            current value between rolls
+          </p>
+        </div>
+        <div className="dice">
+          {nums.map((num) => (
+            <Die
+              value={num.value}
+              held={num.isHeld}
+              hold={() => holdNum(num.id)}
+              key={num.id}
+            />
+          ))}
+        </div>
+        <div className="btn">
+          <button onClick={rollDice}>
+            {endGame ? "New Game" : "Roll Dice"}
           </button>
         </div>
-      )}
-    </main>
+      </main>
+    </div>
   );
 }
