@@ -1,18 +1,13 @@
-import { useState, createContext } from "react";
 import ThemeCard from "./components/ThemeCard";
+import { ThemeProvider } from "./context/theme-context";
+
 function App() {
-  const ThemeContext = createContext();
-
-  const [darkTheme, setDarkTheme] = useState(false);
-
-  const toggleTheme = () => {
-    setDarkTheme((prevTheme) => !prevTheme);
-  };
-
   return (
     <div>
       Hello Captain Hook
-      <ThemeCard />
+      <ThemeProvider>
+        <ThemeCard />
+      </ThemeProvider>
     </div>
   );
 }
