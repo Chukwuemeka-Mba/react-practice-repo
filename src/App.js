@@ -1,28 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, createContext } from "react";
+import ThemeCard from "./components/ThemeCard";
+function App() {
+  const ThemeContext = createContext();
 
-export default function App() {
-  const [starWarsData, setStarWarsData] = useState({});
-  const [count, setCount] = useState(0);
-  console.log("Component Rendered");
-  useEffect(
-    function () {
-      console.log("Use Effect Rendered");
-      fetch(`https://swapi.dev/api/people/${count}`)
-        .then((res) => res.json())
-        .then((data) => setStarWarsData(data));
-    },
-    [count]
-  );
+  const [darkTheme, setDarkTheme] = useState(false);
+
+  const toggleTheme = () => {
+    setDarkTheme((prevTheme) => !prevTheme);
+  };
+
   return (
     <div>
-      <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
-      <h2>The count is {count}</h2>
-      <button
-        type="submit"
-        onClick={() => setCount((prevCount) => prevCount + 1)}
-      >
-        Add Count
-      </button>
+      Hello Captain Hook
+      <ThemeCard />
     </div>
   );
 }
+
+export default App;
