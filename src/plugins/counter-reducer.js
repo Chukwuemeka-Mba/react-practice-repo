@@ -9,7 +9,6 @@ export const reducer = (state, action) => {
 
     case "decrement":
       if (state.count > 0) return { ...state, count: state.count - 1 };
-      break;
     case "reset":
       return { ...state, count: (state.count = 0) };
 
