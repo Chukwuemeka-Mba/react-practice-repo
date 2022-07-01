@@ -1,4 +1,4 @@
-import ThemeCard from "./components/ThemeCard";
+import CounterCard from "./components/CounterCard";
 import { ThemeProvider } from "./context/theme-context";
 
 function App() {
@@ -6,7 +6,7 @@ function App() {
     <div>
       Hello Captain Hook
       <ThemeProvider>
-        <ThemeCard />
+        <CounterCard />
       </ThemeProvider>
     </div>
   );
