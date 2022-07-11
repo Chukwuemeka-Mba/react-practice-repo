@@ -1,4 +1,5 @@
 import CounterCard from "./components/CounterCard";
+import DoughnutChart from "./components/DoughnutChart";
 import { ThemeProvider } from "./context/theme-context";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
       <ThemeProvider>
         <CounterCard />
       </ThemeProvider>
+      <DoughnutChart />
     </div>
   );
 }
